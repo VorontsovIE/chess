@@ -1,4 +1,5 @@
 enum Color { WHITE, BLACK };
+enum Figure_Type {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING, EMPTY_CELL};
 
 class Figure {
 private:
@@ -7,18 +8,31 @@ public:
   virtual bool is_empty() {
     return false;
   }
+  
   // Three geometric checks
   virtual bool check(Turn* t) = 0; //{return false;}
+  
   virtual bool check_not_eat(NotEatTurn* t){
     return check(t);
   }
+
+  virtual Figure_Type type() = 0;
+  
+
+  virtual bool check_eat_pass(En_Passant* t){
+    return false;
+  }
+  
   virtual bool check_eat(EatTurn* t) {
     return check(t);
   }
+  
   virtual vector<Coordinates> path(Turn* t) = 0;
+
   Figure(Color w_b){
     m_color = w_b;
   }
+  
   Color color() {
     return m_color;
   }
@@ -26,10 +40,21 @@ public:
 
 class Empty_cell : public Figure {
 public:
-	Emty_cell(Color w_b) : Figure(w_b) { }
+	Empty_cell() : Figure(WHITE) { } // cheap and dirty
 	
+  virtual bool check(Turn* t) {
+    throw std::logic_error("Empty_cell isn't able to call #check function");
+  }
+  virtual vector<Coordinates> path(Turn* t) {
+    throw std::logic_error("Empty_cell isn't able to call #path function");
+  }
+
+  virtual Figure_Type type() {
+    return EMPTY_CELL;
+  }
+
 	virtual bool is_empty() {
-	return true;
+  	return true;
 	}
 
 };
@@ -38,10 +63,17 @@ class King : public Figure {
 	public:
 	King(Color w_b) : Figure(w_b) { }
 	virtual bool check(Turn* t) {
-	return t->col_diff() == 1 && t->row_diff() == 1;
+    // return ( abs(t->col_diff() == 1) && abs(t->row_diff() == 1) ) || ( abs(t->col_diff() + abs(t->row_diff() ) == 1;
+    return max(abs(t->col_diff()), abs(t->row_diff()) ) == 1;
 	}
+
+  virtual Figure_Type type() {
+    return KING;
+  }
+
+
 	virtual vector<Coordinates> path(Turn* t) {
-    return vector<Coordinates> v_path;
+    return vector<Coordinates>();
   }
 
 };
@@ -50,10 +82,16 @@ class Knight : public Figure {
 	public:
 	Knight(Color w_b) : Figure(w_b) { }
 	virtual bool check(Turn* t) {
-	return abs(t->col_diff()) < 3 && abs(t->col_diff()) > 1 && abs(t->row_diff()) < 3 && abs(t->row_diff()) > 1 && ( abs(t->row_diff()) + abs(t->col_diff()) ) == 3;
+  	return abs(t->col_diff()) < 3 && abs(t->col_diff()) >= 1 && abs(t->row_diff()) < 3 && abs(t->row_diff()) >= 1 && \
+           ( abs(t->row_diff()) + abs(t->col_diff()) ) == 3;
 	}
-	virtual vector<Coordinates> path(Turn* t) { //не нужно?
-    return vector<Coordinates> v_path;
+  virtual Figure_Type type() {
+    return KNIGHT;
+  }
+
+
+	virtual vector<Coordinates> path(Turn* t) { //нужно
+    return vector<Coordinates>();
   }
 };
 
@@ -63,6 +101,10 @@ public:
   virtual bool check(Turn* t) { // Fix dereference
     return t.from().column() == t.to().column() || t.from().row() == t.to().row();
   }
+  virtual Figure_Type type() {
+    return ROOK;
+  }
+
   virtual vector<Coordinates> path(Turn* t) {
     vector<Coordinates> v_path;
     if (t->row_diff() == 0) {
@@ -86,6 +128,10 @@ public:
   Bishop(Color w_b) : Figure(w_b) { }
   virtual bool check(Turn* t) {
       return abs(t.from().column() - t.to().column()) == abs(t.from().row() - t.to().row());
+  }
+
+    virtual Figure_Type type() {
+    return BISHOP;
   }
 
   virtual vector<Coordinates> path(Turn* t) {
@@ -126,23 +172,56 @@ class Pawn : public Figure {
 public:
   Pawn(Color w_b) : Figure(w_b) { }
 
-  virtual bool check(Turn* t) {
+  bool check_eat_geometric(Turn* t) {
+    // ...
+    // (взято из Turn)
+    // if (begin.row() > end.row() && begin.column() > end.column()) {
+    //  field.setFigure(begin.column()-1, begin.row(), new Empty_cell());
+    // }
+    // else if (begin.row() > end.row() && begin.column() < end.column()) {
+    //  field.setFigure(begin.column()+1, begin.row(), new Empty_cell());
+    // }
+    // else if (begin.row() < end.row() && begin.column() < end.column()) {
+    //  field.setFigure(begin.column()+1, begin.row(), new Empty_cell());
+    // }
+    // else if (begin.row() < end.row() && begin.column() > end.column()) {
+    //  field.setFigure(begin.column()-1, begin.row(), new Empty_cell());
+    // }
+  }
+
+  virtual bool check_eat(Turn* t) {
+    return check_eat_geometric(t) // && final state is enemy and is not empty cell
+
+  }
+
+  virtual bool check_not_eat(Turn* t) {
+    if (t.col_diff() != 0) {
+      return false;
+    }
     if (color() == WHITE) {
-      if (t.from().row() == 1 && t.col_diff() == 0) {
+      if (t.from().row() == 1) {
         return t.row_diff() == 2 || t.row_diff() == 1;
       }
       else {
-        return t.row_diff() == 1 && t.col_diff() == 0;
+        return t.row_diff() == 1;
       }
     }
     else {
-      if (t.from().row() == 6 && t.col_diff() == 0) {
+      if (t.from().row() == 6) {
         return t.row_diff() == -2 || t.row_diff() == -1;
       }
       else {
-        return t.row_diff() == -1 && t.col_diff() == 0;
+        return t.row_diff() == -1;
       }
     }
+  }
+
+    virtual bool check_eat_pass(En_Passant* t){
+    return t->check_history_pass() && check_eat_geometric(t);
+  }
+
+    virtual Figure_Type type() {
+    return PAWN;
   }
 
   virtual vector<Coordinates> path(Turn* t) {
@@ -163,6 +242,9 @@ public:
     return abs(t->from().column() - t->to().column()) == abs(t->from().row() - t->to().row())  ||  t.from().column() == t.to().column() || t.from().row() == t.to().row();
   }
 
+  virtual Figure_Type type() {
+    return QUEEN;
+  }
 
   virtual vector<Coordinates> path(Turn* t) {
     if (abs(t->from().column() - t->to().column()) == abs(t->from().row() - t->to().row())) {

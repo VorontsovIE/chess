@@ -130,19 +130,7 @@ class En_Passant : public Turn {
 		field.setFigure(begin, new Empty_cell());
 		
 		//установка Empty_cell на место съеденной пешки
-
-		if (begin.row() > end.row() && begin.column() > end.column()) {
-			field.setFigure(begin.column()-1, begin.row(), new Empty_cell());
-		}
-		else if (begin.row() > end.row() && begin.column() < end.column()) {
-			field.setFigure(begin.column()+1, begin.row(), new Empty_cell());
-		}
-		else if (begin.row() < end.row() && begin.column() < end.column()) {
-			field.setFigure(begin.column()+1, begin.row(), new Empty_cell());
-		}
-		else if (begin.row() < end.row() && begin.column() > end.column()) {
-			field.setFigure(begin.column()-1, begin.row(), new Empty_cell());
-		}
+		field.setFigure(end.column(), begin.row(), new Empty_cell());
 	}
 
 	<<
