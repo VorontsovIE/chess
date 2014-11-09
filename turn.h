@@ -122,13 +122,36 @@ class Castle : public Abstract_Turn {
 };
 
 class En_Passant : public Turn {
-	check
-	apply
+	virtual bool check(const Field& field) {
+		return field.get_figure(begin).check_eat_pass(this);
+	}
+	virtual void apply(Field& field) {
+		field.setFigure(end, field.get_figure(begin));
+		field.setFigure(begin, new Empty_cell());
+		
+		//установка Empty_cell на место съеденной пешки
+
+		if (begin.row() > end.row() && begin.column() > end.column()) {
+			field.setFigure(begin.column()-1, begin.row(), new Empty_cell());
+		}
+		else if (begin.row() > end.row() && begin.column() < end.column()) {
+			field.setFigure(begin.column()+1, begin.row(), new Empty_cell());
+		}
+		else if (begin.row() < end.row() && begin.column() < end.column()) {
+			field.setFigure(begin.column()+1, begin.row(), new Empty_cell());
+		}
+		else if (begin.row() < end.row() && begin.column() > end.column()) {
+			field.setFigure(begin.column()-1, begin.row(), new Empty_cell());
+		}
+	}
+
 	<<
 };
 
 class Pawn_Promotion : public Turn {
-	check
+	virtual bool check(const Field& field) {
+		return field.get_figure(begin).check_promotion(this);
+	}
 	
 	virtual void apply(Field& field) {
 		field.setFigure(end, field.choose_figure());

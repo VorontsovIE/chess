@@ -24,6 +24,39 @@ public:
   }
 };
 
+class Empty_cell : public Figure {
+public:
+	Emty_cell(Color w_b) : Figure(w_b) { }
+	
+	virtual bool is_empty() {
+	return true;
+	}
+
+};
+
+class King : public Figure {
+	public:
+	King(Color w_b) : Figure(w_b) { }
+	virtual bool check(Turn* t) {
+	return t->col_diff() == 1 && t->row_diff() == 1;
+	}
+	virtual vector<Coordinates> path(Turn* t) {
+    return vector<Coordinates> v_path;
+  }
+
+};
+
+class Knight : public Figure {
+	public:
+	Knight(Color w_b) : Figure(w_b) { }
+	virtual bool check(Turn* t) {
+	return abs(t->col_diff()) < 3 && abs(t->col_diff()) > 1 && abs(t->row_diff()) < 3 && abs(t->row_diff()) > 1 && ( abs(t->row_diff()) + abs(t->col_diff()) ) == 3;
+	}
+	virtual vector<Coordinates> path(Turn* t) { //не нужно?
+    return vector<Coordinates> v_path;
+  }
+};
+
 class Rook : public Figure {
 public:
   Rook(Color w_b) : Figure(w_b) { }
@@ -33,15 +66,15 @@ public:
   virtual vector<Coordinates> path(Turn* t) {
     vector<Coordinates> v_path;
     if (t->row_diff() == 0) {
-      for (int col = min(t->from().column(), t->to().column()) + 1; col < max(t->from().column(), t->to().column()) ; ++col) {
-        v_path.push_back(Coordinates(t->from().row(), col));  
+			for (int col = min(t->from().column(), t->to().column()) + 1; col < max(t->from().column(), t->to().column()) ; ++col) {
+				v_path.push_back(Coordinates(t->from().row(), col));  
       }
     } else if (t->col_diff() == 0) {
-      for (int row = min(t->from().row(), t->to().row()) + 1; row < max(t->from().row(), t->to().row()) ; ++row) {
-        v_path.push_back(Coordinates(row, t->from().column()));  
+			for (int row = min(t->from().row(), t->to().row()) + 1; row < max(t->from().row(), t->to().row()) ; ++row) {
+				v_path.push_back(Coordinates(row, t->from().column()));  
       }
     } else {
-      throw std::logic_error("Impossible situation");
+		throw std::logic_error("Impossible situation");
     }
     return v_path;
   }
@@ -60,31 +93,31 @@ public:
   vector<Coordinates> v_path;
 
   if (t->from().row() < t->to().row() && t->from().column() < t->to().column()) { //слева снизу -> наверх вправо
-    for (int row = t->from().row() + 1, int col = t->from().column() + 1; row < t->to().row(), col < t->to().column(); ++row, ++col ) {
-    v_path.push_back(Coordinates(row, col));
-    }
-  }
+		for (int row = t->from().row() + 1, int col = t->from().column() + 1; row < t->to().row() && col < t->to().column(); ++row, ++col ) {
+			v_path.push_back(Coordinates(row, col));
+		}
+	}
   else if (t->from().row() > t->to().row() && t->from().column() > t->to().column()) { // сверху справа -> вниз налево
-    for (int row = t->to().row() + 1, int col = t->to().column() + 1; row < t->from().row(), col < t->from().column(); ++row, ++col ) {
-    v_path.push_back(Coordinates(row, col));
-    }
-  }
+		for (int row = t->to().row() + 1, int col = t->to().column() + 1; row < t->from().row() && col < t->from().column(); ++row, ++col ) {
+			v_path.push_back(Coordinates(row, col));
+		}
+	}
   else if (t->from().row() > t->to().row() && t->from().column() < t->to().column()) { //слева сверху -> вниз вправо
-    for (int row = t->from().row() - 1, int col = t->from().column() + 1; row > t->to().row(), col < t->to().column(); --row, ++col ) {
-    v_path.push_back(Coordinates(row, col));
-    }
-  }
+		for (int row = t->from().row() - 1, int col = t->from().column() + 1; row > t->to().row() && col < t->to().column(); --row, ++col ) {
+			v_path.push_back(Coordinates(row, col));
+		}
+	}
 
   else if (t->from().row() < t->to().row() && t->from().column() > t->to().column()) { //снизу справа -> наверх налево
-    for (int row = t->to().row() - 1, int col = t->to().column() + 1; row > t->from().row(), col < t->from().column(); --row, ++col ) {
-    v_path.push_back(Coordinates(row, col));
-    }
+		for (int row = t->to().row() - 1, int col = t->to().column() + 1; row > t->from().row() && col < t->from().column(); --row, ++col ) {
+			v_path.push_back(Coordinates(row, col));
+		}
   }
 
   else {
-  throw std::logic_error("Impossible situation");
+	throw std::logic_error("Impossible situation");
   }
-  return v_path;
+	return v_path;
   }
 
 };
@@ -137,46 +170,46 @@ public:
       vector<Coordinates> v_path;
 
       if (t->from().row() < t->to().row() && t->from().column() < t->to().column()) { //слева снизу -> наверх вправо
-        for (int row = t->from().row() + 1, int col = t->from().column() + 1; row < t->to().row(), col < t->to().column(); ++row, ++col ) {
-          v_path.push_back(Coordinates(row, col));
+			for (int row = t->from().row() + 1, int col = t->from().column() + 1; row < t->to().row() && col < t->to().column(); ++row, ++col ) {
+				v_path.push_back(Coordinates(row, col));
         }
       }
       else if (t->from().row() > t->to().row() && t->from().column() > t->to().column()) { // сверху справа -> вниз налево
-        for (int row = t->to().row() + 1, int col = t->to().column() + 1; row < t->from().row(), col < t->from().column(); ++row, ++col ) {
-          v_path.push_back(Coordinates(row, col));
+			for (int row = t->to().row() + 1, int col = t->to().column() + 1; row < t->from().row() && col < t->from().column(); ++row, ++col ) {
+				v_path.push_back(Coordinates(row, col));
         }
       }
       else if (t->from().row() > t->to().row() && t->from().column() < t->to().column()) { //слева сверху -> вниз вправо
-        for (int row = t->from().row() - 1, int col = t->from().column() + 1; row > t->to().row(), col < t->to().column(); --row, ++col ) {
-          v_path.push_back(Coordinates(row, col));
+			for (int row = t->from().row() - 1, int col = t->from().column() + 1; row > t->to().row() && col < t->to().column(); --row, ++col ) {
+				v_path.push_back(Coordinates(row, col));
         }
       }
 
       else if (t->from().row() < t->to().row() && t->from().column() > t->to().column()) { //снизу справа -> наверх налево
-        for (int row = t->to().row() - 1, int col = t->to().column() + 1; row > t->from().row(), col < t->from().column(); --row, ++col ) {
-          v_path.push_back(Coordinates(row, col));
+			for (int row = t->to().row() - 1, int col = t->to().column() + 1; row > t->from().row() && col < t->from().column(); --row, ++col ) {
+				v_path.push_back(Coordinates(row, col));
         }
       }
 
       else {
-        throw std::logic_error("Impossible situation");
+			throw std::logic_error("Impossible situation");
       }
 
     } else if (t.from().column() == t.to().column() || t.from().row() == t.to().row()) {
       vector<Coordinates> v_path;
       if (t->row_diff() == 0) {
-        for (int col = min(t->from().column(), t->to().column()) + 1; col < max(t->from().column(), t->to().column()) ; ++col) {
-          v_path.push_back(Coordinates(t->from().row(), col));  
+			for (int col = min(t->from().column(), t->to().column()) + 1; col < max(t->from().column(), t->to().column()) ; ++col) {
+				v_path.push_back(Coordinates(t->from().row(), col));  
         }
       } else if (t->col_diff() == 0) {
-        for (int row = min(t->from().row(), t->to().row()) + 1; row < max(t->from().row(), t->to().row()) ; ++row) {
-          v_path.push_back(Coordinates(row, t->from().column()));  
+			for (int row = min(t->from().row(), t->to().row()) + 1; row < max(t->from().row(), t->to().row()) ; ++row) {
+				v_path.push_back(Coordinates(row, t->from().column()));  
         }
       } else {
-        throw std::logic_error("Impossible situation");
+			throw std::logic_error("Impossible situation");
       }
 
     }
-    return v_path;
+		return v_path;
   }
 };
