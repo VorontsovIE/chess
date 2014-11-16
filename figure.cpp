@@ -173,29 +173,36 @@ public:
   Pawn(Color w_b) : Figure(w_b) { }
 
   bool check_eat_geometric(Turn* t) {
-    // ...
-    // (взято из Turn)
-    // if (begin.row() > end.row() && begin.column() > end.column()) {
-    //  field.setFigure(begin.column()-1, begin.row(), new Empty_cell());
-    // }
-    // else if (begin.row() > end.row() && begin.column() < end.column()) {
-    //  field.setFigure(begin.column()+1, begin.row(), new Empty_cell());
-    // }
-    // else if (begin.row() < end.row() && begin.column() < end.column()) {
-    //  field.setFigure(begin.column()+1, begin.row(), new Empty_cell());
-    // }
-    // else if (begin.row() < end.row() && begin.column() > end.column()) {
-    //  field.setFigure(begin.column()-1, begin.row(), new Empty_cell());
-    // }
+
+     if (begin.row() > end.row() && begin.column() > end.column()) {
+		 return begin.column()-1 == end.column() && begin.row()-1 == end.row();
+		 }
+     }
+     else if (begin.row() > end.row() && begin.column() < end.column()) {
+		  return begin.column()+1 == end.column() && begin.row()-1 == end.row();
+		 }
+     else if (begin.row() < end.row() && begin.column() < end.column()) {
+		  return begin.column()+1 == end.column() && begin.row()+1 == end.row();
+     }
+     else if (begin.row() < end.row() && begin.column() > end.column()) {
+		  return begin.column()-1 == end.column() && begin.row()+1 == end.row();
+     }
+
   }
 
   virtual bool check_eat(Turn* t) {
-    return check_eat_geometric(t) // && final state is enemy and is not empty cell
+	 // && final state is enemy and is not empty cell
+    return check_eat_geometric(t) && /
+		field.get_figure(end.row(), end.column()).color() != field.get_figure(begin.row(), begin.column()).color() && /
+		field.get_figure(end.row(), end.column()).type() != EMPTY_CELL;
+  }
 
+  virtual bool check_promotion(Turn* t) {
+	  return check_not_eat(t) || check_eat(t);  
   }
 
   virtual bool check_not_eat(Turn* t) {
-    if (t.col_diff() != 0) {
+    if (t.col_diff() != 0 || field.get_figure(end.row(), end.column()).type() != EMPTY_CELL) {
       return false;
     }
     if (color() == WHITE) {
