@@ -24,6 +24,10 @@ public:
     }
   }
 
+  static Abstract_Turn* create_turn(string s) { 
+  	// TODO!!!...
+  }
+
   Coordinates from () {
     return begin;
   }

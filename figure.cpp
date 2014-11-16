@@ -175,8 +175,7 @@ public:
   bool check_eat_geometric(Turn* t) {
 
      if (begin.row() > end.row() && begin.column() > end.column()) {
-		 return begin.column()-1 == end.column() && begin.row()-1 == end.row();
-		 }
+  		 return begin.column()-1 == end.column() && begin.row()-1 == end.row();
      }
      else if (begin.row() > end.row() && begin.column() < end.column()) {
 		  return begin.column()+1 == end.column() && begin.row()-1 == end.row();
@@ -302,3 +301,6 @@ public:
 		return v_path;
   }
 };
+
+// Ладья и король пока не помнят, ходили ли они. Им поменять метод apply. 
+// Если фигура появилась из пешки, то ее тоже можно сделать ходившей
