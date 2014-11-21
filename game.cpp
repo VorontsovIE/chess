@@ -1,4 +1,5 @@
 class Game {
+	//проверка изменений
 private:
   Color current_side;
   Field field;
