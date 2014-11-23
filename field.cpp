@@ -5,6 +5,7 @@
 class Field {
 private:
   vector<vector <Figure*>> v_field;
+  current_side_field = WHITE;
 public:
   Field () {
     v_field = vector<vector<Figure*>>();
@@ -89,6 +90,35 @@ public:
 
   Figure& get_figure (const Coordinates& coord) {
     return *v_field[coord.column()][coord.row()];
+  }
+
+  bool check_check () { //проверка наличия шаха королю той стороны, которая делает ход
+
+	  int letter_king, digit_king;
+	  for (int i = 0; i<=7; ++i) {
+		  for (int k = 0; k<=7; ++k) 
+			  if (get_figure(i,k).type() == KING && get_figure(i,k).colour() == current_side_field ) {
+					letter_king = i;
+					digit_king = k;
+					break;
+			  }
+		  }
+	  }
+
+	  for (int i = 0; i<=7; ++i) {
+		  for (int k = 0; k<=7; ++k) {
+			//*v_field[i][k].check_eat?
+			  if (get_figure(i,k).type() != KING && get_figure(i,k).colour() != current_side_field) {
+					  EatTurn* t  = &EatTurn(Coordinates(i,k), Coordinates(letter_king, digit_king) );
+						  if (get_figure(i,k).check_eat(t)) {
+								return true;
+						  }
+			  } else {
+			  continue;
+			  }
+		  }
+	  }
+	  return false;
   }
 
   Figure* choose_figure() {
