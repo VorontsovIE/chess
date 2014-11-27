@@ -1,23 +1,23 @@
 enum Color { WHITE, BLACK };
+
 enum Figure_Type {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING, EMPTY_CELL};
 
 class Figure {
 private:
   Color m_color;
+  virtual bool check(Turn* t) = 0; //{return false;}
+
 public:
   virtual bool is_empty() {
     return false;
   }
   
+  virtual Figure_Type type() = 0;
+
   // Three geometric checks
-  virtual bool check(Turn* t) = 0; //{return false;}
-  
   virtual bool check_not_eat(NotEatTurn* t){
     return check(t);
   }
-
-  virtual Figure_Type type() = 0;
-  
 
   virtual bool check_eat_pass(En_Passant* t){
     return false;

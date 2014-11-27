@@ -5,7 +5,6 @@
 class Field {
 private:
   vector<vector <Figure*>> v_field;
-  current_side_field = WHITE;
 public:
   Field () {
     v_field = vector<vector<Figure*>>();
@@ -92,33 +91,61 @@ public:
     return *v_field[coord.column()][coord.row()];
   }
 
-  bool check_check () { //проверка наличия шаха королю той стороны, которая делает ход
+  
+  Coordinates king_position (Color current_side) {
+    for (int i = 0; i<=7; ++i) {
+      for (int k = 0; k<=7; ++k) {
+        if (get_figure(i,k).type() == KING && get_figure(i,k).colour() == current_side ) {
+          return Coordinates(i,k);
+        }
+      }
+    }
+  }
 
-	  int letter_king, digit_king;
-	  for (int i = 0; i<=7; ++i) {
-		  for (int k = 0; k<=7; ++k) 
-			  if (get_figure(i,k).type() == KING && get_figure(i,k).colour() == current_side_field ) {
-					letter_king = i;
-					digit_king = k;
-					break;
-			  }
-		  }
-	  }
+  bool check_check (Color current_side) { // РїСЂРѕРІРµСЂРєР°, РїРѕСЃС‚Р°РІР»РµРЅ Р»Рё С€Р°С… РёРіСЂРѕРєСѓ РїРµСЂРµРґР°РЅРЅРѕРіРѕ С†РІРµС‚Р° 
+
+    Coordinates king_position = king_position(current_side); // this line is
+    // Coordinates king_position(king_position(current_side)); // equivalent
+    // Coordinates king_position; king_position = king_position(current_side); // not equivalent
 
 	  for (int i = 0; i<=7; ++i) {
 		  for (int k = 0; k<=7; ++k) {
 			//*v_field[i][k].check_eat?
-			  if (get_figure(i,k).type() != KING && get_figure(i,k).colour() != current_side_field) {
-					  EatTurn* t  = &EatTurn(Coordinates(i,k), Coordinates(letter_king, digit_king) );
-						  if (get_figure(i,k).check_eat(t)) {
-								return true;
-						  }
-			  } else {
-			  continue;
+			  if (get_figure(i,k).type() != KING && get_figure(i,k).type() != EMPTY_CELL && get_figure(i,k).colour() != current_side) {
+          EatTurn t  = EatTurn( Coordinates(i,k), king_position );
+				  
+				  if (get_figure(i,k).check_eat(&t)) {
+						return true;
+				  }
 			  }
 		  }
 	  }
 	  return false;
+  }
+
+  bool check_mate (Color current_side) {
+    if (!check_check(current_side)) {
+        return false;
+    }
+    // vector<AbstractTurn*> king_possibilities_2(...)
+    vector<Coordinates> vector_king_possibilities = king_possibilities(current_side);
+    for (int i = 0; i < vector_king_possibilities.size(); ++i) {
+        if (get_figure(vector_king_possibilities[i]).type() == EMPTY_CELL) {
+          NonEatTurn t(king_position(current_side), vector_king_possibilities[i]);
+          if (t.check(*this)) {
+            Field field_copy = *this;
+            t.apply(field_copy);
+            if (!field_copy.check_check(current_side)) {
+              return false;
+            }
+          }
+
+        } // else { ...eat turn... }
+    }
+
+    // РїСЂРѕРІРµСЂРєР° Р·Р°РіРѕСЂР°Р¶РёРІР°РЅРёСЏ
+    
+    return true;
   }
 
   Figure* choose_figure() {

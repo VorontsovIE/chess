@@ -83,7 +83,7 @@ class NonEatTurn : public Turn {
 class EatTurn : public Turn {
 	
 	virtual bool check(const Field& field) {
-		return field.get_figure(begin).check_eat(this);
+		return field.get_figure(begin).check_eat(this) && field.get_figure(end).color() != field.get_figure(begin).color();
 	}
 
 	<<
