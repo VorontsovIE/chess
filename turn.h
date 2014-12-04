@@ -77,7 +77,7 @@ class NonEatTurn : public Turn {
 		return field.get_figure(begin).check_not_eat(this);
 	}
 
-	<<
+	// <<
 };
 
 class EatTurn : public Turn {
@@ -86,7 +86,7 @@ class EatTurn : public Turn {
 		return field.get_figure(begin).check_eat(this) && field.get_figure(end).color() != field.get_figure(begin).color();
 	}
 
-	<<
+	// <<
 };
 
 class Castle : public Abstract_Turn {
@@ -122,7 +122,7 @@ class Castle : public Abstract_Turn {
 	}
 	
 
-	<<
+	// <<
 };
 
 class En_Passant : public Turn {
@@ -137,7 +137,7 @@ class En_Passant : public Turn {
 		field.setFigure(end.column(), begin.row(), new Empty_cell());
 	}
 
-	<<
+	// <<
 };
 
 class Pawn_Promotion : public Turn {
@@ -150,7 +150,7 @@ class Pawn_Promotion : public Turn {
 		field.setFigure(begin, new Empty_cell());
 	}
 
-	<<
+	// <<
 };
 
 #endif

@@ -1,3 +1,8 @@
+#include <string>
+#include <stdexcept>
+#include <iostream>
+using namespace std;
+
 // m_letter: 0..7
 // m_digit:  0..7
 class Coordinates {
@@ -23,7 +28,7 @@ public:
   // }
 
   // "e2" --> (4,1)
-  Coordinates (string coords) {
+  explicit Coordinates (string coords) {
     if (coords.length() != 2) {
       throw std::invalid_argument("Incorrect coordinates");
     }
@@ -50,7 +55,6 @@ public:
 
   friend ostream& operator << (ostream& out, const Coordinates& c);
 };
-
 
 ostream& operator << (ostream& out, const Coordinates& c) {
    out << (char)(c.m_letter + 'a') << (c.m_digit + 1);
