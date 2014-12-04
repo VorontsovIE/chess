@@ -1,6 +1,7 @@
 #include "common.h"
-#include "field.cpp"
 #include "turn.h"
+#include "field.h"
+#include "coord.h"
 
 
 class Game {
@@ -22,7 +23,8 @@ public:
 
   bool finished () {
     // сделать field.check_mate() и field.stale_mate()  и проверку шаха
-    return check_time_finished() || field.check_mate() || field.stale_mate();
+    // return check_time_finished() || field.check_mate(current_side) || field.stale_mate();
+    return check_time_finished() || field.check_mate(current_side);
   }
 
   bool check_time_finished() {
@@ -40,13 +42,13 @@ public:
 
     story.push_back(t);
 
+    current_side = (current_side == WHITE) ?  BLACK : WHITE;
     if (finished()) { // что если ничья? пат / конец времени
-      cout << current_side << " has won\n";
+      cout << current_side << " has lost\n";
       system("pause");
       exit(0);
     }
    // current_side == WHITE ? current_side = BLACK : current_side = WHITE;
-   current_side = (current_side == WHITE) ?  BLACK : WHITE;
 
    //x = condition ? if_true : if_false
 

@@ -1,11 +1,20 @@
 #ifndef _CHESS_TURN_H
 #define _CHESS_TURN_H  1
 
+class Abstract_Turn;
+class Turn;
+class NonEatTurn;
+class EatTurn;
+class Castle;
+class En_Passant;
+class Pawn_Promotion;
+
 #include "common.h"
 #include "coord.h"
 #include "field.h"
 
 class Abstract_Turn {
+public:
 	virtual bool check(const Field& field) = 0;
 	virtual void apply(Field& field) = 0;
 	virtual vector<Coordinates> path(const Field& field) = 0;

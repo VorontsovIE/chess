@@ -1,13 +1,15 @@
+#ifndef _CHESS_FIELD_H
+#define _CHESS_FIELD_H  1
 #include "common.h"
 #include "figure.h"
 #include "coord.h"
 
 class Field {
 private:
-  vector<vector <Figure*>> v_field;
+  vector<vector <Figure*> > v_field;
 public:
   Field ();
-  Field (const vector<vector <Figure*>>& new_field);
+  Field (const vector<vector <Figure*> >& new_field);
 
   void setFigure(int m_letter, int m_digit, Figure* figure);
   void setFigure(const Coordinates& coord, Figure* figure);
@@ -30,3 +32,5 @@ public:
 
   // friend class Game;    /* http://www.cplusplus.com/doc/tutorial/Inheritance/ */
 };
+
+#endif
