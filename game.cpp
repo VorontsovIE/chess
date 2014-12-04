@@ -1,3 +1,8 @@
+#include "common.h"
+#include "field.cpp"
+#include "turn.h"
+
+
 class Game {
 	//проверка изменений
 private:

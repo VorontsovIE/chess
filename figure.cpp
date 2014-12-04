@@ -1,4 +1,4 @@
-enum Color { WHITE, BLACK };
+#include "common.h"
 
 enum Figure_Type {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING, EMPTY_CELL};
 
