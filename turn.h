@@ -79,8 +79,8 @@ public:
     return long_or_short;
   }
 
+  // ToDo: apply, check и две другие ф-ции пока чисто виртуальны; их надо написать!
 private:
-  // ToDo: apply, check и две другие ф-ции пока чисто виртуальны; их надо написать
 	void apply_kingside_white (Field& field);
 
 	void apply_kingside_black (Field& field);

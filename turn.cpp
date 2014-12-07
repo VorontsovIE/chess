@@ -114,6 +114,7 @@ virtual bool Pawn_Promotion::check(const Field& field) {
 }
 
 virtual void Pawn_Promotion::apply(Field& field) {
+  // нам не нужно выбирать тип фигуры, мы его уже знаем. Но нужно создать фигуру этого типа (и нужного цвета)
   field.setFigure(end, field.choose_figure()); 
   field.setFigure(begin, new Empty_cell());
 }
