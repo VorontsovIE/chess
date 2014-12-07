@@ -10,5 +10,7 @@
 using namespace std;
 
 enum Color { WHITE, BLACK };
+enum Figure_Type {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING, EMPTY_CELL};
+
 
 #endif

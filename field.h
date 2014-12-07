@@ -1,5 +1,8 @@
 #ifndef _CHESS_FIELD_H
 #define _CHESS_FIELD_H  1
+
+class Field;
+
 #include "common.h"
 #include "figure.h"
 #include "coord.h"

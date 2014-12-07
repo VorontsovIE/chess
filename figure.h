@@ -1,10 +1,10 @@
 #ifndef _CHESS_FIGURE_H
 #define _CHESS_FIGURE_H  1
 
+
 #include "common.h"
 #include "turn.h"
 
-enum Figure_Type {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING, EMPTY_CELL};
 
 class Figure {
 private:
@@ -27,10 +27,10 @@ public:
 
 
 class Empty_cell : public Figure {
+  virtual bool check(Turn* t);
 public:
   Empty_cell();
   
-  virtual bool check(Turn* t);
   virtual vector<Coordinates> path(Turn* t);
   virtual Figure_Type type();
 
@@ -38,33 +38,33 @@ public:
 };
 
 class King : public Figure {
-  public:
-  King(Color w_b);
   virtual bool check(Turn* t);
+public:
+  King(Color w_b);
   virtual Figure_Type type();
   virtual vector<Coordinates> path(Turn* t);
 };
 
 class Knight : public Figure {
-  public:
-  Knight(Color w_b);
   virtual bool check(Turn* t);
+public:
+  Knight(Color w_b);
   virtual Figure_Type type();
   virtual vector<Coordinates> path(Turn* t);
 };
 
 class Rook : public Figure {
+  virtual bool check(Turn* t);
 public:
   Rook(Color w_b);
-  virtual bool check(Turn* t);
   virtual Figure_Type type();
   virtual vector<Coordinates> path(Turn* t);
 };
 
 class Bishop : public Figure {
+  virtual bool check(Turn* t);
 public:
   Bishop(Color w_b);
-  virtual bool check(Turn* t);
 
   virtual Figure_Type type();
   virtual vector<Coordinates> path(Turn* t);
@@ -74,6 +74,7 @@ class Pawn : public Figure {
 public:
   Pawn(Color w_b);
 
+  virtual bool check(Turn* t);
   bool check_eat_geometric(Turn* t);
   virtual bool check_eat(Turn* t);
   virtual bool check_promotion(Turn* t);
@@ -84,10 +85,10 @@ public:
 };
 
 class Queen : public Figure {
+  virtual bool check(Turn* t);
 public:
   Queen(Color w_b);
 
-  virtual bool check(Turn* t);
   virtual Figure_Type type();
   virtual vector<Coordinates> path(Turn* t);
 };

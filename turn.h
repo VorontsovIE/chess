@@ -49,14 +49,38 @@ public:
 };
 
 class NonEatTurn : public Turn {
+public:
 	virtual bool check(const Field& field);
+  NonEatTurn (Coordinates new_begin, Coordinates new_end) : Turn(new_begin,new_end) { }
 };
 
 class EatTurn : public Turn {
+public:
 	virtual bool check(const Field& field);
+  EatTurn (Coordinates new_begin, Coordinates new_end) : Turn(new_begin,new_end) { }
 };
 
 class Castle : public Abstract_Turn {
+
+private:
+  Color current_side;
+  bool long_or_short;
+
+public:
+  Castle(Color current_side_new, bool long_or_short_new) { // true - long, false - short;
+    current_side = current_side_new;
+    long_or_short = long_or_short_new;
+  }
+
+  Color get_color() { 
+    return current_side;
+  }
+  bool get_type_castle () { 
+    return long_or_short;
+  }
+
+private:
+  // ToDo: apply, check и две другие ф-ции пока чисто виртуальны; их надо написать
 	void apply_kingside_white (Field& field);
 
 	void apply_kingside_black (Field& field);
@@ -70,12 +94,22 @@ class En_Passant : public Turn {
 	virtual bool check(const Field& field);
 
 	virtual void apply(Field& field);
+  En_Passant (Coordinates new_begin, Coordinates new_end) : Turn(new_begin,new_end) { }
 };
 
 class Pawn_Promotion : public Turn {
-	virtual bool check(const Field& field);
-	
-	virtual void apply(Field& field);
+	private: 
+  Figure_Type fig_type;
+
+  Pawn_Promotion (Coordinates new_begin, Coordinates new_end, Figure_Type fig_type_new) : Turn(new_begin,new_end) { 
+    fig_type = fig_type_new;
+  }
+
+  virtual bool check(const Field& field);
+  virtual void apply(Field& field);
+  Figure_Type get_fig_type() {
+    return fig_type;
+  }
 };
 
 #endif

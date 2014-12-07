@@ -11,12 +11,12 @@ virtual bool Figure::check_not_eat(NonEatTurn* t){
   return check(t);
 }
 
-virtual bool Figure::check_eat_pass(En_Passant* t){
-  return false;
-}
-
 virtual bool Figure::check_eat(EatTurn* t) {
   return check(t);
+}
+
+virtual bool Figure::check_eat_pass(En_Passant* t){
+  return false;
 }
 
 virtual vector<Coordinates> path(Turn* t) = 0;
@@ -153,6 +153,10 @@ return v_path;
 
 Pawn::Pawn(Color w_b) : Figure(w_b) { }
 
+virtual bool Pawn::check(Turn* t) {
+  throw std::logic_error("This function should not be used");
+}
+
 bool Pawn::check_eat_geometric(Turn* t) {
 
    if (begin.row() > end.row() && begin.column() > end.column()) {
@@ -203,7 +207,7 @@ virtual bool Pawn::check_not_eat(Turn* t) {
   }
 }
 
-  virtual bool Pawn::check_eat_pass(En_Passant* t){
+virtual bool Pawn::check_eat_pass(En_Passant* t){
   return t->check_history_pass() && check_eat_geometric(t);
 }
 

@@ -67,7 +67,7 @@ virtual bool EatTurn::check(const Field& field) {
 
 
 
-  void Castle::apply_kingside_white (Field& field) {
+void Castle::apply_kingside_white (Field& field) {
   field.setFigure(0, 6, new King(true)); // Можно не создавать новых, а воспользоваться старыми королем и ладьей
   field.setFigure(0, 4, new Empty_cell());
   field.setFigure(0, 5, new Rook(true));
@@ -114,7 +114,7 @@ virtual bool Pawn_Promotion::check(const Field& field) {
 }
 
 virtual void Pawn_Promotion::apply(Field& field) {
-  field.setFigure(end, field.choose_figure());
+  field.setFigure(end, field.choose_figure()); 
   field.setFigure(begin, new Empty_cell());
 }
 
