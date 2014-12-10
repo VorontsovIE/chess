@@ -29,6 +29,57 @@ Color Figure::color() {
   return m_color;
 }
 
+static Figure* Figure::build_figure(Figure_Type choice, Color color) {
+  switch(choice){
+    case ROOK:
+      return new Rook(color);
+      break;
+    case KNIGHT:
+      return new Knight(color);
+      break;
+    case BISHOP:
+      return new Bishop(color);
+      break;
+    case QUEEN:
+      return new Queen(color);
+      break;
+    case KING:
+      return new King(color);
+      break;
+    case PAWN:
+      return new Pawn(color);
+      break;
+    case EMPTY_CELL:
+      return new Empty_cell();
+      break;
+    // default: 
+    //   ...
+    //   break;
+  }
+  
+  // if (choice == ROOK) {
+  //   return new Rook(color);
+  // }
+  // else if (choice == KNIGHT) {
+  //   return new Knight(color);
+  // }
+  // else if (choice == BISHOP) {
+  //   return new Bishop(color);
+  // }
+  // else if (choice == QUEEN) {
+  //   return new Queen(color);
+  // }
+  // else if (choice == EMPTY_CELL) {
+  //   return new Empty_cell();
+  // }
+  // else if (choice == KING) {
+  //   return new King(color);
+  // }
+  // else if (choice == PAWN) {
+  //   return new Pawn(color);
+  // }
+}
+
 
 
 Empty_Cell::Empty_cell() : Figure(WHITE) { } // cheap and dirty

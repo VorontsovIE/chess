@@ -115,9 +115,31 @@ virtual bool Pawn_Promotion::check(const Field& field) {
 
 virtual void Pawn_Promotion::apply(Field& field) {
   // нам не нужно выбирать тип фигуры, мы его уже знаем. Но нужно создать фигуру этого типа (и нужного цвета)
-  field.setFigure(end, field.choose_figure()); 
+  Color current_side = field.get_figure(begin).color();
+  field.setFigure(end, Figure::build_figure(fig_type, current_side)); 
   field.setFigure(begin, new Empty_cell());
 }
+
+// лучше возвращать Fig_Type чтобы передать его в конструктор PawnPromotion
+// переделать через SWITCH CASE
+static Figure_Type Pawn_Promotion::choose_figure() { 
+  int choice;
+  cout << "Choose the Figure what you want: 1 - Rook, 2 - Knight, 3 - Bishop, 4 - Queen";
+  cin >> choice;
+  if (choice == 1) {
+    return ROOK;
+  }
+  else if (choice == 2) {
+    return KNIGHT;
+  }
+  else if (choice == 3) {
+    return BISHOP;
+  }
+  else if (choice == 4) {
+    return QUEEN;
+  }
+}
+
 
 
 #endif

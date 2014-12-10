@@ -101,6 +101,7 @@ class Pawn_Promotion : public Turn {
 	private: 
   Figure_Type fig_type;
 
+public:
   Pawn_Promotion (Coordinates new_begin, Coordinates new_end, Figure_Type fig_type_new) : Turn(new_begin,new_end) { 
     fig_type = fig_type_new;
   }
@@ -110,6 +111,8 @@ class Pawn_Promotion : public Turn {
   Figure_Type get_fig_type() {
     return fig_type;
   }
+
+  static Figure_Type choose_figure();
 };
 
 #endif

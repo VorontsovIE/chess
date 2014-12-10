@@ -31,7 +31,7 @@ public:
 
   bool check_mate (Color current_side);
 
-  Figure* choose_figure();
+  Figure_Type choose_figure();
 
   // friend class Game;    /* http://www.cplusplus.com/doc/tutorial/Inheritance/ */
 };

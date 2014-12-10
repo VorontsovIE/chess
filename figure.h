@@ -23,6 +23,8 @@ public:
 
   Figure(Color w_b);  
   Color color();
+
+  static Figure* build_figure(Figure_Type choice, Color color);
 };
 
 

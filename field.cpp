@@ -214,22 +214,3 @@ vector<Coordinates> coords_assault_figs =  coords_assault_on_king_figs(current_s
   }
   return true;
 }
-
-// лучше возвращать Fig_Type чтобы передать его в конструктор PawnPromotion
-Figure* Field::choose_figure() {
-	int choice;
-	cout << "Choose the Figure what you want: 1 - Rook, 2 - Knight, 3 - Bishop, 4 - Queen";
-	cin >> choice;
-	if (choice == 1) {
-		return new Rook();
-	}
-	else if (choice == 2) {
-		return new Knight();
-	}
-	else if (choice == 3) {
-		return new Bishop();
-	}
-	else if (choice == 4) {
-		return new Queen();
-	}
-}
