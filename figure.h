@@ -1,7 +1,7 @@
 #ifndef _CHESS_FIGURE_H
 #define _CHESS_FIGURE_H  1
 
-
+class Figure;
 #include "common.h"
 #include "turn.h"
 
