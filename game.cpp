@@ -3,7 +3,7 @@
 #include "field.h"
 #include "coord.h"
 
-
+// Написать Field#draw; Turn.create_turn (проблема: ему скорее всего нужен field чтобы узнать тип хода)
 class Game {
 	//проверка изменений
 private:
