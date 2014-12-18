@@ -37,7 +37,8 @@ public:
     cin >> s;
     Abstract_Turn* t = Turn::create_turn(s);
     if (t->check(field)) {
-      t->apply(field);
+      // t->apply(field);
+      field.apply(t);
     } // а что если ход некорректный?
 
     story.push_back(t);

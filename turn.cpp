@@ -1,6 +1,3 @@
-#ifndef _CHESS_TURN_H
-#define _CHESS_TURN_H  1
-
 #include "turn.h"
 
 ostream& operator << (ostream& out, const Turn& turn) {
@@ -14,7 +11,7 @@ Turn::Turn(Coordinates new_begin, Coordinates new_end) : begin(new_begin), end(n
   }
 }
 
-static Abstract_Turn* Turn::create_turn(string s) { 
+Abstract_Turn* Turn::create_turn(string s) { 
   // TODO!!!...
 }
 
@@ -34,17 +31,17 @@ int Turn::row_diff() {
   return to().row() - from().row();
 }
 
-virtual void Turn::apply(Field& field) {
+void Turn::apply(Field& field) {
   field.setFigure(end, field.get_figure(begin));
   field.setFigure(begin, new Empty_cell());
 } 
 
-virtual vector<Coordinates> Turn::path (const Field& field) {
+vector<Coordinates> Turn::path (const Field& field) {
   return field.get_figure(begin).path(this);
   // field.get_figure(begin).path(begin, end)
 }
 
-virtual bool Turn::path_free(const Field& field) {
+bool Turn::path_free(const Field& field) {
   vector<Coordinates> path_vector = path(field);
   for (int i = 0; i < path_vector.size(); ++i) {
     if (field.get_figure(path_vector[i]).is_empty() == false) {
@@ -56,50 +53,72 @@ virtual bool Turn::path_free(const Field& field) {
 
 
 
-virtual bool NonEatTurn::check(const Field& field) {
-  return field.get_figure(begin).check_not_eat(this);
+bool NonEatTurn::check(const Field& field) {
+  return field.get_figure(begin).check_not_eat(this) && field.get_figure(end).type() == EMPTY_CELL;
 }
 
-virtual bool EatTurn::check(const Field& field) {
-  return field.get_figure(begin).check_eat(this) && field.get_figure(end).color() != field.get_figure(begin).color();
+bool EatTurn::check(const Field& field) {
+  return  field.get_figure(begin).check_eat(this) && \
+          field.get_figure(end).color() != field.get_figure(begin).color() && \
+          field.get_figure(end).type() != EMPTY_CELL;
 }
 
 
 
 
 void Castle::apply_kingside_white (Field& field) {
-  field.setFigure(0, 6, new King(true)); // Можно не создавать новых, а воспользоваться старыми королем и ладьей
+  field.setFigure(0, 6, new King(WHITE)); // Можно не создавать новых, а воспользоваться старыми королем и ладьей
   field.setFigure(0, 4, new Empty_cell());
-  field.setFigure(0, 5, new Rook(true));
+  field.setFigure(0, 5, new Rook(WHITE));
   field.setFigure(0, 7, new Empty_cell());
 }
 
 void Castle::apply_kingside_black (Field& field) {
-  field.setFigure(7, 6, new King(false));
+  field.setFigure(7, 6, new King(BLACK));
   field.setFigure(7, 4, new Empty_cell());
-  field.setFigure(7, 5, new Rook(false));
+  field.setFigure(7, 5, new Rook(BLACK));
   field.setFigure(7, 7, new Empty_cell());
 }
 
 void Castle::apply_queenside_white (Field& field) {
-  field.setFigure(0, 2, new King(true));
+  field.setFigure(0, 2, new King(WHITE));
   field.setFigure(0, 4, new Empty_cell());
-  field.setFigure(0, 3, new Rook(true));
+  field.setFigure(0, 3, new Rook(WHITE));
   field.setFigure(0, 0, new Empty_cell());
 }
 
 void Castle::apply_queenside_black (Field& field) {
-  field.setFigure(7, 2, new King(false));
+  field.setFigure(7, 2, new King(BLACK));
   field.setFigure(7, 4, new Empty_cell());
-  field.setFigure(7, 3, new Rook(false));
+  field.setFigure(7, 3, new Rook(BLACK));
   field.setFigure(7, 0, new Empty_cell());
 }
 
 
-virtual bool En_Passant::check(const Field& field) {
-  return field.get_figure(begin).check_eat_pass(this);
+bool En_Passant::check(const Field& field) {
+  if (field.last_turn == NULL || field.last_turn->turn_type() != NON_EAT_TURN) {
+    return false;
+  }
+  
+  Turn *last_turn = (Turn*)field.last_turn;
+
+  bool check_pass_help;
+  if(field.get_figure(begin).color() == WHITE) {
+    check_pass_help = (to().row() - last_turn->to().row() == 1);
+  } else {
+    check_pass_help = (to().row() - last_turn->to().row() == -1);
+  }
+
+  return field.get_figure(begin).type() == PAWN && field.get_figure(last_turn->to()).type() == PAWN && \
+         field.get_figure(last_turn->to()).color() != field.get_figure(begin).color() && \
+         abs(last_turn->to().column() - begin.column() ) == 1 && \
+         abs(last_turn->row_diff()) == 2 && \
+         last_turn->to().row() == begin.row() && \
+         end.column() == last_turn->to().column() && \
+         check_pass_help;
 }
-virtual void En_Passant::apply(Field& field) {
+
+void En_Passant::apply(Field& field) {
   field.setFigure(end, field.get_figure(begin));
   field.setFigure(begin, new Empty_cell());
   
@@ -109,11 +128,11 @@ virtual void En_Passant::apply(Field& field) {
 
 
 
-virtual bool Pawn_Promotion::check(const Field& field) {
+bool Pawn_Promotion::check(const Field& field) {
   return field.get_figure(begin).check_promotion(this);
 }
 
-virtual void Pawn_Promotion::apply(Field& field) {
+void Pawn_Promotion::apply(Field& field) {
   // нам не нужно выбирать тип фигуры, мы его уже знаем. Но нужно создать фигуру этого типа (и нужного цвета)
   Color current_side = field.get_figure(begin).color();
   field.setFigure(end, Figure::build_figure(fig_type, current_side)); 
@@ -122,7 +141,7 @@ virtual void Pawn_Promotion::apply(Field& field) {
 
 // лучше возвращать Fig_Type чтобы передать его в конструктор PawnPromotion
 // переделать через SWITCH CASE
-static Figure_Type Pawn_Promotion::choose_figure() { 
+Figure_Type Pawn_Promotion::choose_figure() { 
   int choice;
   cout << "Choose the Figure what you want: 1 - Rook, 2 - Knight, 3 - Bishop, 4 - Queen";
   cin >> choice;
@@ -139,7 +158,3 @@ static Figure_Type Pawn_Promotion::choose_figure() {
     return QUEEN;
   }
 }
-
-
-
-#endif

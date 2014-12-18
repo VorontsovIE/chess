@@ -16,9 +16,13 @@ bool Figure::check_eat(EatTurn* t) {
   return check(t);
 }
 
-bool Figure::check_eat_pass(En_Passant* t){
-  return false;
+bool Figure::check_promotion(Pawn_Promotion* t) {
+  return false;  
 }
+
+// bool Figure::check_eat_pass(En_Passant* t){
+//   return false;
+// }
 
 vector<Coordinates> path(Turn* t);
 
@@ -209,36 +213,27 @@ bool Pawn::check(Turn* t) {
   throw std::logic_error("This function should not be used");
 }
 
-bool Pawn::check_eat_geometric(Turn* t) {
-
-   if (t->from().row() > t->to().row() && t->from().column() > t->to().column()) {
-		 return t->from().column()-1 == t->to().column() && t->from().row()-1 == t->to().row();
+bool Pawn::check_eat(Turn* t) {
+  if (t->from().row() > t->to().row() && t->from().column() > t->to().column()) {
+     return t->from().column()-1 == t->to().column() && t->from().row()-1 == t->to().row();
    }
    else if (t->from().row() > t->to().row() && t->from().column() < t->to().column()) {
-	  return t->from().column()+1 == t->to().column() && t->from().row()-1 == t->to().row();
-	 }
+    return t->from().column()+1 == t->to().column() && t->from().row()-1 == t->to().row();
+   }
    else if (t->from().row() < t->to().row() && t->from().column() < t->to().column()) {
-	  return t->from().column()+1 == t->to().column() && t->from().row()+1 == t->to().row();
+    return t->from().column()+1 == t->to().column() && t->from().row()+1 == t->to().row();
    }
    else if (t->from().row() < t->to().row() && t->from().column() > t->to().column()) {
-	  return t->from().column()-1 == t->to().column() && t->from().row()+1 == t->to().row();
+    return t->from().column()-1 == t->to().column() && t->from().row()+1 == t->to().row();
    }
-
 }
 
-bool Pawn::check_eat(Turn* t) {
- // && final state is enemy and is not empty cell
-  return check_eat_geometric(t) && \
-	field.get_figure(t->to().row(), t->to().column()).color() != field.get_figure(t->from().row(), t->from().column()).color() && \
-	field.get_figure(t->to().row(), t->to().column()).type() != EMPTY_CELL;
-}
-
-bool Pawn::check_promotion(Turn* t) {
+bool Pawn::check_promotion(Pawn_Promotion* t) {
   return check_not_eat(t) || check_eat(t);  
 }
 
 bool Pawn::check_not_eat(Turn* t) {
-  if (t->col_diff() != 0 || field.get_figure(t->to().row(), t->to().column()).type() != EMPTY_CELL) {
+  if (t->col_diff() != 0) {
     return false;
   }
   if (color() == WHITE) {
@@ -259,11 +254,12 @@ bool Pawn::check_not_eat(Turn* t) {
   }
 }
 
-bool Pawn::check_eat_pass(En_Passant* t){
-  return t->check_history_pass() && check_eat_geometric(t);
-}
+// bool Pawn::check_eat_pass(En_Passant* t){
+//   // check_eat is just a geometrical check (it doesn't check whether figure is on place)
+//   return t->check_history_pass() && check_eat(t);
+// }
 
-  Figure_Type Pawn::type() {
+Figure_Type Pawn::type() {
   return PAWN;
 }
 

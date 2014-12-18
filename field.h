@@ -10,15 +10,18 @@ class Field;
 class Field {
 private:
   vector<vector <Figure*> > v_field;
+
 public:
-  Field ();
+  Abstract_Turn* last_turn;
+  Field (Abstract_Turn* last_turn = NULL);
   Field (const vector<vector <Figure*> >& new_field);
 
   void setFigure(int m_letter, int m_digit, Figure* figure);
   void setFigure(const Coordinates& coord, Figure* figure);
+  void setFigure(const Coordinates& coord, Figure& figure);
 
-  Figure& get_figure (int m_letter, int m_digit);
-  Figure& get_figure (const Coordinates& coord);
+  Figure& get_figure (int m_letter, int m_digit) const;
+  Figure& get_figure (const Coordinates& coord) const;
 
 
   Coordinates king_position (Color current_side);
@@ -32,6 +35,8 @@ public:
   bool check_mate (Color current_side);
 
   Figure_Type choose_figure();
+
+  void apply(Abstract_Turn* t);
 
   // friend class Game;    /* http://www.cplusplus.com/doc/tutorial/Inheritance/ */
 };

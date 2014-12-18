@@ -17,8 +17,9 @@ public:
 
   // Three geometric checks
   virtual bool check_not_eat(NonEatTurn* t);
-  virtual bool check_eat_pass(En_Passant* t);
+  // virtual bool check_eat_pass(En_Passant* t);
   virtual bool check_eat(EatTurn* t);
+  virtual bool check_promotion(Pawn_Promotion* t);
   virtual vector<Coordinates> path(Turn* t) = 0;
 
   Figure(Color w_b);  
@@ -77,11 +78,10 @@ public:
   Pawn(Color w_b);
 
   virtual bool check(Turn* t);
-  bool check_eat_geometric(Turn* t);
-  virtual bool check_eat(Turn* t);
-  virtual bool check_promotion(Turn* t);
-  virtual bool check_not_eat(Turn* t);
-  virtual bool check_eat_pass(En_Passant* t);
+  virtual bool check_promotion(Pawn_Promotion* t);
+  virtual bool check_eat(Turn* t); // they can take Pawn_Promotion or En_Passant turn, not only Eat/NonEat turns
+  virtual bool check_not_eat(Turn* t); // ditto
+  // virtual bool check_eat_pass(En_Passant* t);
   virtual Figure_Type type();
   virtual vector<Coordinates> path(Turn* t);
 };

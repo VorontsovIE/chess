@@ -1,7 +1,8 @@
 #include "field.h"
 #include "turn.h"
 
-Field::Field () {
+Field::Field(Abstract_Turn* new_last_turn) {
+  last_turn = new_last_turn;
   v_field = vector<vector<Figure*> >();
   for (int i = 0; i<=7; ++i) {
     v_field.push_back(vector<Figure*>());
@@ -51,9 +52,9 @@ Field::Field () {
   setFigure(7,7, new Rook(BLACK));
 }
 
-Field::Field (const vector<vector <Figure*> >& new_field) {
-  v_field = new_field;
-}
+// Field::Field (const vector<vector <Figure*> >& new_field) {
+//   v_field = new_field;
+// }
 
 
 void Field::setFigure(int m_letter, int m_digit, Figure* figure) {
@@ -65,11 +66,15 @@ void Field::setFigure(const Coordinates& coord, Figure* figure) {
   v_field[coord.column()][coord.row()] = figure;
 }
 
-Figure& Field::get_figure (int m_letter, int m_digit) {
+void Field::setFigure(const Coordinates& coord, Figure& figure) {
+  setFigure(coord, &figure);
+}
+
+Figure& Field::get_figure (int m_letter, int m_digit) const {
   return get_figure(Coordinates(m_letter, m_digit));
 }
 
-Figure& Field::get_figure (const Coordinates& coord) {
+Figure& Field::get_figure (const Coordinates& coord) const {
   return *v_field[coord.column()][coord.row()];
 }
 
@@ -213,4 +218,9 @@ vector<Coordinates> coords_assault_figs =  coords_assault_on_king_figs(current_s
 		}
   }
   return true;
+}
+
+void Field::apply(Abstract_Turn* t) {
+  t->apply(*this);
+  last_turn = t;
 }
