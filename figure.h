@@ -12,6 +12,7 @@ private:
   virtual bool check(Turn* t) = 0; //{return false;}
 
 public:
+  virtual string symbol() = 0;
   virtual bool is_empty();  
   virtual Figure_Type type() = 0;
 
@@ -33,7 +34,7 @@ class Empty_cell : public Figure {
   virtual bool check(Turn* t);
 public:
   Empty_cell();
-  
+  virtual string symbol();
   virtual vector<Coordinates> path(Turn* t);
   virtual Figure_Type type();
 
@@ -44,6 +45,7 @@ class King : public Figure {
   virtual bool check(Turn* t);
 public:
   King(Color w_b);
+  virtual string symbol();
   virtual Figure_Type type();
   virtual vector<Coordinates> path(Turn* t);
 };
@@ -52,6 +54,7 @@ class Knight : public Figure {
   virtual bool check(Turn* t);
 public:
   Knight(Color w_b);
+  virtual string symbol();
   virtual Figure_Type type();
   virtual vector<Coordinates> path(Turn* t);
 };
@@ -60,6 +63,7 @@ class Rook : public Figure {
   virtual bool check(Turn* t);
 public:
   Rook(Color w_b);
+  virtual string symbol();
   virtual Figure_Type type();
   virtual vector<Coordinates> path(Turn* t);
 };
@@ -68,7 +72,7 @@ class Bishop : public Figure {
   virtual bool check(Turn* t);
 public:
   Bishop(Color w_b);
-
+  virtual string symbol();
   virtual Figure_Type type();
   virtual vector<Coordinates> path(Turn* t);
 };
@@ -76,11 +80,11 @@ public:
 class Pawn : public Figure {
 public:
   Pawn(Color w_b);
-
+  virtual string symbol();
   virtual bool check(Turn* t);
   virtual bool check_promotion(Pawn_Promotion* t);
-  virtual bool check_eat(Turn* t); // they can take Pawn_Promotion or En_Passant turn, not only Eat/NonEat turns
-  virtual bool check_not_eat(Turn* t); // ditto
+  virtual bool check_eat(EatTurn* t); // they can take Pawn_Promotion or En_Passant turn, not only Eat/NonEat turns
+  virtual bool check_not_eat(NonEatTurn* t); // ditto
   // virtual bool check_eat_pass(En_Passant* t);
   virtual Figure_Type type();
   virtual vector<Coordinates> path(Turn* t);
@@ -90,7 +94,7 @@ class Queen : public Figure {
   virtual bool check(Turn* t);
 public:
   Queen(Color w_b);
-
+  virtual string symbol();
   virtual Figure_Type type();
   virtual vector<Coordinates> path(Turn* t);
 };

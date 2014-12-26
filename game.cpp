@@ -39,6 +39,7 @@ public:
     if (t->check(field)) {
       // t->apply(field);
       field.apply(t);
+      // field.draw();
     } // а что если ход некорректный?
 
     story.push_back(t);
@@ -46,14 +47,19 @@ public:
     current_side = (current_side == WHITE) ?  BLACK : WHITE;
     if (finished()) { // что если ничья? пат / конец времени
       cout << current_side << " has lost\n";
-      system("pause");
-      exit(0);
+      // system("pause");
+      // exit(0);
     }
    // current_side == WHITE ? current_side = BLACK : current_side = WHITE;
 
    //x = condition ? if_true : if_false
 
   } 
+
+  void draw() {
+    field.draw();
+    cout << ((current_side == WHITE) ?  "Turn: white" : "Turn: black") << "\n";
+  }
 
 };
 

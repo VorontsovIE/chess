@@ -213,7 +213,7 @@ bool Pawn::check(Turn* t) {
   throw std::logic_error("This function should not be used");
 }
 
-bool Pawn::check_eat(Turn* t) {
+bool Pawn::check_eat(EatTurn* t) {
   if (t->from().row() > t->to().row() && t->from().column() > t->to().column()) {
      return t->from().column()-1 == t->to().column() && t->from().row()-1 == t->to().row();
    }
@@ -229,10 +229,12 @@ bool Pawn::check_eat(Turn* t) {
 }
 
 bool Pawn::check_promotion(Pawn_Promotion* t) {
-  return check_not_eat(t) || check_eat(t);  
+  NonEatTurn t_not_eat = NonEatTurn(t->from(), t->to());
+  EatTurn t_eat = EatTurn(t->from(), t->to());
+  return check_not_eat(&t_not_eat) || check_eat(&t_eat);
 }
 
-bool Pawn::check_not_eat(Turn* t) {
+bool Pawn::check_not_eat(NonEatTurn* t) {
   if (t->col_diff() != 0) {
     return false;
   }
@@ -330,6 +332,28 @@ vector<Coordinates> Queen::path(Turn* t) {
   }
 	return v_path;
 }
+
+string Pawn::symbol() {
+   return (color() == WHITE) ? "P" : "p";
+  }
+string Rook::symbol() {
+  return (color() == WHITE) ? "R" : "r";
+  }
+string Knight::symbol() {
+  return (color() == WHITE) ? "K" : "k";
+ }
+string Bishop::symbol() {
+  return (color() == WHITE) ? "B" : "b";
+ }
+string Queen::symbol() {
+  return (color() == WHITE) ? "Q" : "q";
+ }
+string King::symbol() {
+  return (color() == WHITE) ? "G" : "g";
+ }
+string Empty_cell::symbol() {
+  return ".";
+ }
 
 // Ладья и король пока не помнят, ходили ли они. Им поменять метод apply. 
 // Если фигура появилась из пешки, то ее тоже можно сделать ходившей

@@ -26,6 +26,8 @@ public:
 
   Coordinates king_position (Color current_side);
 
+  void draw();
+
   bool check_check (Color current_side);
 
   vector<Coordinates> coords_assault_on_king_figs (Color current_side);

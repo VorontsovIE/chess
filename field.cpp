@@ -56,6 +56,16 @@ Field::Field(Abstract_Turn* new_last_turn) {
 //   v_field = new_field;
 // }
 
+void Field::draw() {
+  cout << "--------\n";
+  for (int row = 7; row >= 0; --row ) {
+    for (int col = 0; col < 8; ++col) {
+      cout << v_field[col][row]->symbol();
+    }
+    cout << "\n";
+  }
+  cout << "--------\n";
+}
 
 void Field::setFigure(int m_letter, int m_digit, Figure* figure) {
   setFigure(Coordinates(m_letter, m_digit), figure);
@@ -93,15 +103,14 @@ bool Field::check_check (Color current_side) { // проверка, постав
   Coordinates king_pos = king_position(current_side); // this line is
   // Coordinates king_pos(king_position(current_side)); // equivalent
   // Coordinates king_pos; king_pos = king_position(current_side); // not equivalent
-
   for (int i = 0; i<=7; ++i) {
-	  for (int k = 0; k<=7; ++k) {
-		//*v_field[i][k].check_eat?
-		  if (get_figure(i,k).type() != KING && get_figure(i,k).type() != EMPTY_CELL && get_figure(i,k).color() != current_side) {
+    for (int k = 0; k<=7; ++k) {
+    //*v_field[i][k].check_eat?
+      if (get_figure(i,k).type() != KING && get_figure(i,k).type() != EMPTY_CELL && get_figure(i,k).color() != current_side) {
         EatTurn t  = EatTurn( Coordinates(i,k), king_pos );
-			  if (get_figure(i,k).check_eat(&t)) {
-					return true;
-			  }
+        if (get_figure(i,k).check_eat(&t)) {
+          return true;
+        }
 		  }
 	  }
   }
@@ -163,7 +172,7 @@ bool Field::check_mate (Color current_side) {
         }
       }
     } // else { ...eat turn... }
-  	else {
+    else {
       EatTurn t(king_position(current_side), vector_king_possibilities[i]);
       if (t.check(*this)) {
         Field field_copy = *this;
@@ -175,47 +184,47 @@ bool Field::check_mate (Color current_side) {
     }
   }
 
-vector<Coordinates> coords_assault_figs =  coords_assault_on_king_figs(current_side);
+  vector<Coordinates> coords_assault_figs =  coords_assault_on_king_figs(current_side);
   // проверка загораживания
-	if (coords_assault_figs.size() == 2) {
-		return true;
-	} else {
-		Coordinates coord_assault = coords_assault_figs[0];
-		EatTurn e_t = EatTurn(coord_assault, king_position(current_side));
-		vector<Coordinates> v_for_check_defense =  get_figure(coord_assault).path(&e_t);
-		for (int i = 0; i<=7; ++i) {
-		  for (int k = 0; k<=7; ++k) {
-				if (get_figure(i,k).type() != EMPTY_CELL && get_figure(i,k).color() == current_side) {
-					for (int counter = 0; counter < v_for_check_defense.size(); ++counter) {
-						NonEatTurn n_e_t = NonEatTurn(Coordinates(i,k), v_for_check_defense[counter]);
-						if (n_e_t.check(*this)) {
-							Field field_copy = *this;
-							n_e_t.apply(field_copy);
-							if (!field_copy.check_check(current_side)) {
-  							return false;
-							}
-						}
-					}
-				}
-		  }
-		}
-	}
+  if (coords_assault_figs.size() == 2) {
+    return true;
+  } else {
+    Coordinates coord_assault = coords_assault_figs[0];
+    EatTurn e_t = EatTurn(coord_assault, king_position(current_side));
+    vector<Coordinates> v_for_check_defense =  get_figure(coord_assault).path(&e_t);
+    for (int i = 0; i<=7; ++i) {
+      for (int k = 0; k<=7; ++k) {
+        if (get_figure(i,k).type() != EMPTY_CELL && get_figure(i,k).color() == current_side) {
+          for (int counter = 0; counter < v_for_check_defense.size(); ++counter) {
+            NonEatTurn n_e_t = NonEatTurn(Coordinates(i,k), v_for_check_defense[counter]);
+            if (n_e_t.check(*this)) {
+              Field field_copy = *this;
+              n_e_t.apply(field_copy);
+              if (!field_copy.check_check(current_side)) {
+                return false;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
-	//проверка съедения атакующей фигуры
-	Coordinates coord_assault = coords_assault_figs[0];
+  //проверка съедения атакующей фигуры
+  Coordinates coord_assault = coords_assault_figs[0];
   for (int i = 0; i<=7; ++i) {
-	  for (int k = 0; k<=7; ++k) {
-			if (get_figure(i,k).type() != EMPTY_CELL && get_figure(i,k).color() == current_side) {
-				EatTurn e_t = EatTurn(Coordinates(i,k), coord_assault);
-				if (e_t.check(*this)) {
-					Field field_copy = *this;
-					e_t.apply(field_copy);
-					if (!field_copy.check_check(current_side)) {
-						return false;
-					}
-				}
-  		}
-		}
+    for (int k = 0; k<=7; ++k) {
+      if (get_figure(i,k).type() != EMPTY_CELL && get_figure(i,k).color() == current_side) {
+        EatTurn e_t = EatTurn(Coordinates(i,k), coord_assault);
+        if (e_t.check(*this)) {
+          Field field_copy = *this;
+          e_t.apply(field_copy);
+          if (!field_copy.check_check(current_side)) {
+            return false;
+          }
+        }
+      }
+    }
   }
   return true;
 }

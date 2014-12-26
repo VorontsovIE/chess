@@ -13,6 +13,7 @@ Turn::Turn(Coordinates new_begin, Coordinates new_end) : begin(new_begin), end(n
 
 Abstract_Turn* Turn::create_turn(string s) { 
   // TODO!!!...
+  throw std::logic_error("Turn.create_turn not implemented");
 }
 
 Coordinates Turn::from () {
