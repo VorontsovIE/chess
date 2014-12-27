@@ -13,7 +13,50 @@ Turn::Turn(Coordinates new_begin, Coordinates new_end) : begin(new_begin), end(n
 
 Abstract_Turn* Turn::create_turn(string s) { 
   // TODO!!!...
-  throw std::logic_error("Turn.create_turn not implemented");
+  //throw std::logic_error("Turn.create_turn not implemented");
+	string turn_string = s;
+	cout << "Enter your turn\n";
+	getline(cin, turn_string);
+	int pos = 0;
+	while (pos < turn_string.length()) {
+		turn_string[pos] = tolower(turn_string[pos]);
+		++pos;
+		}
+
+	int letter_from;
+	int digit_from;
+	int letter_to;
+	int digit_to;
+
+	pos = 0;
+	vector<char> v_letters;
+	vector<char> v_digits;
+
+	while (pos < turn_string.length()) {
+		if (isalpha(turn_string[pos])) {
+		v_letters.push_back(turn_string[pos]);
+		}
+		else if (isdigit(turn_string[pos])) {
+		v_digits.push_back(turn_string[pos]);	
+		}
+	++pos;
+	}
+
+	if ( v_letters.size() != 2 || v_digits.size() != 2 ) {
+	throw std::invalid_argument("Incorrect coordinates");
+	}
+
+	letter_from = (int)v_letters[0] - 'a';
+	letter_to = (int)v_letters[1] - 'a';
+	digit_from = v_digits[0];
+	digit_to = v_digits[1];
+
+	if ( field.get_figure(letter_to, digit_to).type() != EMPTY_CELL ) {
+		Abstract_Turn* result_turn = &EatTurn(Coordinates(letter_from, digit_from), Coordinates(letter_to, digit_to));
+	} else {
+		Abstract_Turn* result_turn = &NonEatTurn(Coordinates(letter_from, digit_from), Coordinates(letter_to, digit_to));
+	}
+	return result_turn;
 }
 
 Coordinates Turn::from () {
