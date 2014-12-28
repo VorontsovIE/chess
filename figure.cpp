@@ -5,8 +5,6 @@ bool Figure::is_empty() {
   return false;
 }
 
-Figure_Type type();
-
 // Three geometric checks
 bool Figure::check_not_eat(NonEatTurn* t){
   return check(t);

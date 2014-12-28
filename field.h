@@ -10,6 +10,7 @@ class Field;
 class Field {
 private:
   vector<vector <Figure*> > v_field;
+  bool king_can_go_away(Color current_side);
 
 public:
   Abstract_Turn* last_turn;

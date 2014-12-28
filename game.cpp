@@ -33,15 +33,15 @@ public:
 
   void make_turn() {
     string turn_string;
-    cout << "Enter your turn";
+    cout << "Enter your turn ";
     getline(cin, turn_string);
     Abstract_Turn* t = Turn::create_turn(turn_string, field);
+
     if (t->check(field)) {
       // t->apply(field);
       field.apply(t);
       // field.draw();
     } // а что если ход некорректный?
-
     story.push_back(t);
 
     current_side = (current_side == WHITE) ?  BLACK : WHITE;

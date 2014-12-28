@@ -72,7 +72,9 @@ void Field::setFigure(int m_letter, int m_digit, Figure* figure) {
 }
 
 void Field::setFigure(const Coordinates& coord, Figure* figure) {
-  delete v_field[coord.column()][coord.row()];
+  if (v_field[coord.column()][coord.row()] != figure) {
+    delete v_field[coord.column()][coord.row()];
+  }
   v_field[coord.column()][coord.row()] = figure;
 }
 
@@ -87,7 +89,6 @@ Figure& Field::get_figure (int m_letter, int m_digit) const {
 Figure& Field::get_figure (const Coordinates& coord) const {
   return *v_field[coord.column()][coord.row()];
 }
-
 
 Coordinates Field::king_position (Color current_side) {
   for (int i = 0; i<=7; ++i) {
@@ -111,8 +112,8 @@ bool Field::check_check (Color current_side) { // проверка, постав
         if (get_figure(i,k).check_eat(&t)) {
           return true;
         }
-		  }
-	  }
+      }
+    }
   }
   return false;
 }
@@ -154,12 +155,7 @@ vector<Coordinates> Field::king_possibilities (Color current_side) {
 	return vector_king_possibilities;
 }
 
-bool Field::check_mate (Color current_side) {
-  if (!check_check(current_side)) {
-      return false;
-  }
-  // vector<AbstractTurn*> king_possibilities_2(...)
-
+bool Field::king_can_go_away(Color current_side) {
   vector<Coordinates> vector_king_possibilities = king_possibilities(current_side);
   for (int i = 0; i < vector_king_possibilities.size(); ++i) {
     if (get_figure(vector_king_possibilities[i]).type() == EMPTY_CELL) {
@@ -168,7 +164,7 @@ bool Field::check_mate (Color current_side) {
         Field field_copy = *this;
         t.apply(field_copy);
         if (!field_copy.check_check(current_side)) {
-          return false;
+          return true;
         }
       }
     } // else { ...eat turn... }
@@ -178,10 +174,23 @@ bool Field::check_mate (Color current_side) {
         Field field_copy = *this;
         t.apply(field_copy);
         if (!field_copy.check_check(current_side)) {
-          return false;
+          return true;
         }
       }
     }
+  }
+  return false;
+}
+
+bool Field::check_mate (Color current_side) {
+  if (!check_check(current_side)) {
+      return false;
+  }
+  // vector<AbstractTurn*> king_possibilities_2(...)
+
+
+  if(king_can_go_away(current_side)) {
+    return false;
   }
 
   vector<Coordinates> coords_assault_figs =  coords_assault_on_king_figs(current_side);

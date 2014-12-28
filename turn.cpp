@@ -16,7 +16,6 @@ Abstract_Turn* Turn::create_turn(const string& turn_string, const Field& field) 
   int pos = 0;
 	while (pos < turn_string.length()) {
     turn_str_changed.push_back(tolower(turn_string[pos]));
-		// turn_str_changed += tolower(turn_string[pos]);
 		++pos;
 	}
 
