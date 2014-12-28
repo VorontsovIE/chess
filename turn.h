@@ -32,7 +32,7 @@ protected:
 
 public:
 
-  static Abstract_Turn* create_turn(string s);
+  static Abstract_Turn* create_turn(const string& s, const Field& field);
 
   Coordinates from ();
 	

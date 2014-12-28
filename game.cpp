@@ -32,10 +32,10 @@ public:
   }
 
   void make_turn() {
-    string s;
+    string turn_string;
     cout << "Enter your turn";
-    cin >> s;
-    Abstract_Turn* t = Turn::create_turn(s);
+    getline(cin, turn_string);
+    Abstract_Turn* t = Turn::create_turn(turn_string, field);
     if (t->check(field)) {
       // t->apply(field);
       field.apply(t);

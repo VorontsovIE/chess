@@ -11,17 +11,14 @@ Turn::Turn(Coordinates new_begin, Coordinates new_end) : begin(new_begin), end(n
   }
 }
 
-Abstract_Turn* Turn::create_turn(string s) { 
-  // TODO!!!...
-  //throw std::logic_error("Turn.create_turn not implemented");
-	string turn_string = s;
-	cout << "Enter your turn\n";
-	getline(cin, turn_string);
-	int pos = 0;
+Abstract_Turn* Turn::create_turn(const string& turn_string, const Field& field) {
+  string turn_str_changed;
+  int pos = 0;
 	while (pos < turn_string.length()) {
-		turn_string[pos] = tolower(turn_string[pos]);
+    turn_str_changed.push_back(tolower(turn_string[pos]));
+		// turn_str_changed += tolower(turn_string[pos]);
 		++pos;
-		}
+	}
 
 	int letter_from;
 	int digit_from;
@@ -32,31 +29,30 @@ Abstract_Turn* Turn::create_turn(string s) {
 	vector<char> v_letters;
 	vector<char> v_digits;
 
-	while (pos < turn_string.length()) {
-		if (isalpha(turn_string[pos])) {
-		v_letters.push_back(turn_string[pos]);
-		}
-		else if (isdigit(turn_string[pos])) {
-		v_digits.push_back(turn_string[pos]);	
-		}
-	++pos;
-	}
+	while (pos < turn_str_changed.length()) {
+		if (isalpha(turn_str_changed[pos])) {
+      v_letters.push_back(turn_str_changed[pos]);
+    }
+    else if (isdigit(turn_str_changed[pos])) {
+      v_digits.push_back(turn_str_changed[pos]);  
+    }
+    ++pos;
+  }
 
 	if ( v_letters.size() != 2 || v_digits.size() != 2 ) {
-	throw std::invalid_argument("Incorrect coordinates");
+    throw std::invalid_argument("Incorrect coordinates");
 	}
 
 	letter_from = (int)v_letters[0] - 'a';
 	letter_to = (int)v_letters[1] - 'a';
-	digit_from = v_digits[0];
-	digit_to = v_digits[1];
+	digit_from = v_digits[0] - '1';
+	digit_to = v_digits[1] - '1';
 
 	if ( field.get_figure(letter_to, digit_to).type() != EMPTY_CELL ) {
-		Abstract_Turn* result_turn = &EatTurn(Coordinates(letter_from, digit_from), Coordinates(letter_to, digit_to));
+		return new EatTurn(Coordinates(letter_from, digit_from), Coordinates(letter_to, digit_to));
 	} else {
-		Abstract_Turn* result_turn = &NonEatTurn(Coordinates(letter_from, digit_from), Coordinates(letter_to, digit_to));
+		return new NonEatTurn(Coordinates(letter_from, digit_from), Coordinates(letter_to, digit_to));
 	}
-	return result_turn;
 }
 
 Coordinates Turn::from () {
