@@ -71,8 +71,7 @@ int Turn::row_diff() {
 }
 
 void Turn::apply(Field& field) {
-  field.setFigure(end, field.get_figure(begin));
-  field.setFigure(begin, new Empty_cell());
+  field.moveFigure(begin, end);
 } 
 
 vector<Coordinates> Turn::path (const Field& field) {
@@ -158,8 +157,7 @@ bool En_Passant::check(const Field& field) {
 }
 
 void En_Passant::apply(Field& field) {
-  field.setFigure(end, field.get_figure(begin));
-  field.setFigure(begin, new Empty_cell());
+  field.moveFigure(begin, end);
   
   //установка Empty_cell на место съеденной пешки
   field.setFigure(end.column(), begin.row(), new Empty_cell());

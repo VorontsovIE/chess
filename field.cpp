@@ -56,6 +56,14 @@ Field::Field(Abstract_Turn* new_last_turn) {
 //   v_field = new_field;
 // }
 
+Field::~Field() {
+  for (int i = 0; i<=7; ++i) {
+    for (int k = 0; k<=7; ++k) {
+      // delete v_field[i][k]; // TODO: uncomment!
+    }
+  }
+}
+
 void Field::draw() {
   cout << "--------\n";
   for (int row = 7; row >= 0; --row ) {
@@ -65,6 +73,12 @@ void Field::draw() {
     cout << "\n";
   }
   cout << "--------\n";
+}
+
+void Field::moveFigure(const Coordinates& coord_begin, const Coordinates& coord_end) {
+  delete v_field[coord_end.column()][coord_end.row()];
+  v_field[coord_end.column()][coord_end.row()] = v_field[coord_begin.column()][coord_begin.row()];
+  v_field[coord_begin.column()][coord_begin.row()] = new Empty_cell();
 }
 
 void Field::setFigure(int m_letter, int m_digit, Figure* figure) {
@@ -146,7 +160,7 @@ vector<Coordinates> Field::king_possibilities (Color current_side) {
   int center_col = center_coord.column();
 	for (int i = center_row - 1; i <= center_row + 1; ++i ) {
 		for (int k = center_col - 1; k <= center_col + 1; ++k) {
-			if (i != k ) {
+			if ( !(i == center_row && k == center_col) && Coordinates::valid_coordinates(i,k)) {
 				Coordinates el_vector_k_p = Coordinates(i,k);
 				vector_king_possibilities.push_back(el_vector_k_p);
 			}

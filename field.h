@@ -13,10 +13,12 @@ private:
   bool king_can_go_away(Color current_side);
 
 public:
+  ~Field();
   Abstract_Turn* last_turn;
   Field (Abstract_Turn* last_turn = NULL);
   Field (const vector<vector <Figure*> >& new_field);
 
+  void moveFigure(const Coordinates& coord_begin, const Coordinates& coord_end);
   void setFigure(int m_letter, int m_digit, Figure* figure);
   void setFigure(const Coordinates& coord, Figure* figure);
   void setFigure(const Coordinates& coord, Figure& figure);

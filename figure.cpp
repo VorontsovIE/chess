@@ -332,10 +332,10 @@ vector<Coordinates> Queen::path(Turn* t) {
 }
 
 string Pawn::symbol() {
-   return (color() == WHITE) ? "P" : "p";
+   return (color() == WHITE) ? "♙" : "♟";
   }
 string Rook::symbol() {
-  return (color() == WHITE) ? "R" : "r";
+  return (color() == WHITE) ? "♖" : "♜";
   }
 string Knight::symbol() {
   return (color() == WHITE) ? "K" : "k";

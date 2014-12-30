@@ -21,6 +21,9 @@ public:
   bool operator == (const Coordinates& other) const;
 
   friend ostream& operator << (ostream& out, const Coordinates& c);
+  static bool valid_coordinates(int i, int k) { //either (letter, digit) or (row,column)
+    return 0 <= i && i <= 7 && 0 <= k && k <= 7;
+  }
 };
 
 #endif

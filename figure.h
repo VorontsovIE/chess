@@ -12,7 +12,7 @@ private:
   virtual bool check(Turn* t) = 0; //{return false;}
 
 public:
-  virtual ~Figure() { cerr << "~Figure"<<endl; }
+  virtual ~Figure() { }
   virtual string symbol() = 0;
   virtual bool is_empty();  
   virtual Figure_Type type() = 0;

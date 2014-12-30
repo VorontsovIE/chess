@@ -32,16 +32,21 @@ public:
   }
 
   void make_turn() {
-    string turn_string;
-    cout << "Enter your turn ";
-    getline(cin, turn_string);
-    Abstract_Turn* t = Turn::create_turn(turn_string, field);
+    Abstract_Turn* t;
+    while (true) {
+      string turn_string;
+      cout << "Enter your turn ";
+      getline(cin, turn_string);
+      t = Turn::create_turn(turn_string, field);
 
-    if (t->check(field)) {
-      // t->apply(field);
-      field.apply(t);
-      // field.draw();
-    } // а что если ход некорректный?
+      if (t->check(field)) {
+        // t->apply(field);
+        field.apply(t);
+        break;
+        // field.draw();
+      } // а что если ход некорректный?
+      cout << "Turn was wrong\n";
+    }
     story.push_back(t);
 
     current_side = (current_side == WHITE) ?  BLACK : WHITE;
