@@ -3,66 +3,58 @@
 
 Field::Field(Abstract_Turn* new_last_turn) {
   last_turn = new_last_turn;
-  v_field = vector<vector<Figure*> >();
+  v_field = vector<vector<FigurePtr> >();
   for (int i = 0; i<=7; ++i) {
-    v_field.push_back(vector<Figure*>());
+    v_field.push_back(vector<FigurePtr>());
     for (int k = 0; k<=7; ++k) {
-      v_field[i].push_back(new Empty_cell());
+      v_field[i].push_back(make_shared<Empty_cell>());
     }
   }
 
-  setFigure(0,0, new Rook(WHITE));
-  setFigure(0,1, new Pawn(WHITE));
-  setFigure(0,6, new Pawn(BLACK));
-  setFigure(0,7, new Rook(BLACK));
+  setFigure(0,0, make_shared<Rook>(WHITE));
+  setFigure(0,1, make_shared<Pawn>(WHITE));
+  setFigure(0,6, make_shared<Pawn>(BLACK));
+  setFigure(0,7, make_shared<Rook>(BLACK));
 
-  setFigure(1,0, new Knight(WHITE));
-  setFigure(1,1, new Pawn(WHITE));
-  setFigure(1,6, new Pawn(BLACK));
-  setFigure(1,7, new Knight(BLACK));
+  setFigure(1,0, make_shared<Knight>(WHITE));
+  setFigure(1,1, make_shared<Pawn>(WHITE));
+  setFigure(1,6, make_shared<Pawn>(BLACK));
+  setFigure(1,7, make_shared<Knight>(BLACK));
 
-  setFigure(2,0, new Bishop(WHITE));
-  setFigure(2,1, new Pawn(WHITE));
-  setFigure(2,6, new Pawn(BLACK));
-  setFigure(2,7, new Bishop(BLACK));
+  setFigure(2,0, make_shared<Bishop>(WHITE));
+  setFigure(2,1, make_shared<Pawn>(WHITE));
+  setFigure(2,6, make_shared<Pawn>(BLACK));
+  setFigure(2,7, make_shared<Bishop>(BLACK));
 
-  setFigure(3,0, new Queen(WHITE));
-  setFigure(3,1, new Pawn(WHITE));
-  setFigure(3,6, new Pawn(BLACK));
-  setFigure(3,7, new Queen(BLACK));
+  setFigure(3,0, make_shared<Queen>(WHITE));
+  setFigure(3,1, make_shared<Pawn>(WHITE));
+  setFigure(3,6, make_shared<Pawn>(BLACK));
+  setFigure(3,7, make_shared<Queen>(BLACK));
 
-  setFigure(4,0, new King(WHITE));
-  setFigure(4,1, new Pawn(WHITE));
-  setFigure(4,6, new Pawn(BLACK));
-  setFigure(4,7, new King(BLACK));
+  setFigure(4,0, make_shared<King>(WHITE));
+  setFigure(4,1, make_shared<Pawn>(WHITE));
+  setFigure(4,6, make_shared<Pawn>(BLACK));
+  setFigure(4,7, make_shared<King>(BLACK));
 
-  setFigure(5,0, new Bishop(WHITE));
-  setFigure(5,1, new Pawn(WHITE));
-  setFigure(5,6, new Pawn(BLACK));
-  setFigure(5,7, new Bishop(BLACK));
+  setFigure(5,0, make_shared<Bishop>(WHITE));
+  setFigure(5,1, make_shared<Pawn>(WHITE));
+  setFigure(5,6, make_shared<Pawn>(BLACK));
+  setFigure(5,7, make_shared<Bishop>(BLACK));
 
-  setFigure(6,0, new Knight(WHITE));
-  setFigure(6,1, new Pawn(WHITE));
-  setFigure(6,6, new Pawn(BLACK));
-  setFigure(6,7, new Knight(BLACK));
+  setFigure(6,0, make_shared<Knight>(WHITE));
+  setFigure(6,1, make_shared<Pawn>(WHITE));
+  setFigure(6,6, make_shared<Pawn>(BLACK));
+  setFigure(6,7, make_shared<Knight>(BLACK));
 
-  setFigure(7,0, new Rook(WHITE));
-  setFigure(7,1, new Pawn(WHITE));
-  setFigure(7,6, new Pawn(BLACK));
-  setFigure(7,7, new Rook(BLACK));
+  setFigure(7,0, make_shared<Rook>(WHITE));
+  setFigure(7,1, make_shared<Pawn>(WHITE));
+  setFigure(7,6, make_shared<Pawn>(BLACK));
+  setFigure(7,7, make_shared<Rook>(BLACK));
 }
 
-// Field::Field (const vector<vector <Figure*> >& new_field) {
+// Field::Field (const vector<vector <FigurePtr> >& new_field) {
 //   v_field = new_field;
 // }
-
-Field::~Field() {
-  for (int i = 0; i<=7; ++i) {
-    for (int k = 0; k<=7; ++k) {
-      // delete v_field[i][k]; // TODO: uncomment!
-    }
-  }
-}
 
 void Field::draw() {
   cout << "--------\n";
@@ -76,24 +68,17 @@ void Field::draw() {
 }
 
 void Field::moveFigure(const Coordinates& coord_begin, const Coordinates& coord_end) {
-  delete v_field[coord_end.column()][coord_end.row()];
+  //delete v_field[coord_end.column()][coord_end.row()];
   v_field[coord_end.column()][coord_end.row()] = v_field[coord_begin.column()][coord_begin.row()];
-  v_field[coord_begin.column()][coord_begin.row()] = new Empty_cell();
+  v_field[coord_begin.column()][coord_begin.row()] = shared_ptr<Empty_cell>(new Empty_cell());
 }
 
-void Field::setFigure(int m_letter, int m_digit, Figure* figure) {
+void Field::setFigure(int m_letter, int m_digit, FigurePtr figure) {
   setFigure(Coordinates(m_letter, m_digit), figure);
 }
 
-void Field::setFigure(const Coordinates& coord, Figure* figure) {
-  if (v_field[coord.column()][coord.row()] != figure) {
-    delete v_field[coord.column()][coord.row()];
-  }
+void Field::setFigure(const Coordinates& coord, FigurePtr figure) {
   v_field[coord.column()][coord.row()] = figure;
-}
-
-void Field::setFigure(const Coordinates& coord, Figure& figure) {
-  setFigure(coord, &figure);
 }
 
 Figure& Field::get_figure (int m_letter, int m_digit) const {

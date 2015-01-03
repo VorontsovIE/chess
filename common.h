@@ -6,7 +6,8 @@
 #include <stdexcept>
 #include <iostream>
 #include <vector>
-#include<cctype>
+#include <cctype>
+#include <memory>
 
 using namespace std;
 

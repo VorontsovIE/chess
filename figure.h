@@ -1,8 +1,9 @@
 #ifndef _CHESS_FIGURE_H
 #define _CHESS_FIGURE_H  1
 
-class Figure;
 #include "common.h"
+class Figure;
+typedef shared_ptr<Figure> FigurePtr;
 #include "turn.h"
 
 
@@ -27,7 +28,7 @@ public:
   Figure(Color w_b);  
   Color color();
 
-  static Figure* build_figure(Figure_Type choice, Color color);
+  static FigurePtr build_figure(Figure_Type choice, Color color);
 };
 
 

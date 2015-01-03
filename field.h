@@ -7,21 +7,21 @@ class Field;
 #include "figure.h"
 #include "coord.h"
 
+
+
 class Field {
 private:
-  vector<vector <Figure*> > v_field;
+  vector<vector <FigurePtr> > v_field;
   bool king_can_go_away(Color current_side);
 
 public:
-  ~Field();
   Abstract_Turn* last_turn;
   Field (Abstract_Turn* last_turn = NULL);
-  Field (const vector<vector <Figure*> >& new_field);
+  Field (const vector<vector <FigurePtr> >& new_field);
 
   void moveFigure(const Coordinates& coord_begin, const Coordinates& coord_end);
-  void setFigure(int m_letter, int m_digit, Figure* figure);
-  void setFigure(const Coordinates& coord, Figure* figure);
-  void setFigure(const Coordinates& coord, Figure& figure);
+  void setFigure(int m_letter, int m_digit, FigurePtr figure);
+  void setFigure(const Coordinates& coord, FigurePtr figure);
 
   Figure& get_figure (int m_letter, int m_digit) const;
   Figure& get_figure (const Coordinates& coord) const;

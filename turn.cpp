@@ -105,31 +105,31 @@ bool EatTurn::check(const Field& field) {
 
 
 void Castle::apply_kingside_white (Field& field) {
-  field.setFigure(0, 6, new King(WHITE)); // Можно не создавать новых, а воспользоваться старыми королем и ладьей
-  field.setFigure(0, 4, new Empty_cell());
-  field.setFigure(0, 5, new Rook(WHITE));
-  field.setFigure(0, 7, new Empty_cell());
+  field.setFigure(0, 6, make_shared<King>(WHITE)); // Можно не создавать новых, а воспользоваться старыми королем и ладьей
+  field.setFigure(0, 4, make_shared<Empty_cell>());
+  field.setFigure(0, 5, make_shared<Rook>(WHITE));
+  field.setFigure(0, 7, make_shared<Empty_cell>());
 }
 
 void Castle::apply_kingside_black (Field& field) {
-  field.setFigure(7, 6, new King(BLACK));
-  field.setFigure(7, 4, new Empty_cell());
-  field.setFigure(7, 5, new Rook(BLACK));
-  field.setFigure(7, 7, new Empty_cell());
+  field.setFigure(7, 6, make_shared<King>(BLACK));
+  field.setFigure(7, 4, make_shared<Empty_cell>());
+  field.setFigure(7, 5, make_shared<Rook>(BLACK));
+  field.setFigure(7, 7, make_shared<Empty_cell>());
 }
 
 void Castle::apply_queenside_white (Field& field) {
-  field.setFigure(0, 2, new King(WHITE));
-  field.setFigure(0, 4, new Empty_cell());
-  field.setFigure(0, 3, new Rook(WHITE));
-  field.setFigure(0, 0, new Empty_cell());
+  field.setFigure(0, 2, make_shared<King>(WHITE));
+  field.setFigure(0, 4, make_shared<Empty_cell>());
+  field.setFigure(0, 3, make_shared<Rook>(WHITE));
+  field.setFigure(0, 0, make_shared<Empty_cell>());
 }
 
 void Castle::apply_queenside_black (Field& field) {
-  field.setFigure(7, 2, new King(BLACK));
-  field.setFigure(7, 4, new Empty_cell());
-  field.setFigure(7, 3, new Rook(BLACK));
-  field.setFigure(7, 0, new Empty_cell());
+  field.setFigure(7, 2, make_shared<King>(BLACK));
+  field.setFigure(7, 4, make_shared<Empty_cell>());
+  field.setFigure(7, 3, make_shared<Rook>(BLACK));
+  field.setFigure(7, 0, make_shared<Empty_cell>());
 }
 
 
@@ -160,7 +160,7 @@ void En_Passant::apply(Field& field) {
   field.moveFigure(begin, end);
   
   //установка Empty_cell на место съеденной пешки
-  field.setFigure(end.column(), begin.row(), new Empty_cell());
+  field.setFigure(end.column(), begin.row(), make_shared<Empty_cell>());
 }
 
 
@@ -173,7 +173,7 @@ void Pawn_Promotion::apply(Field& field) {
   // нам не нужно выбирать тип фигуры, мы его уже знаем. Но нужно создать фигуру этого типа (и нужного цвета)
   Color current_side = field.get_figure(begin).color();
   field.setFigure(end, Figure::build_figure(fig_type, current_side)); 
-  field.setFigure(begin, new Empty_cell());
+  field.setFigure(begin, make_shared<Empty_cell>());
 }
 
 // лучше возвращать Fig_Type чтобы передать его в конструктор PawnPromotion

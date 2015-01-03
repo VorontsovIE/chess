@@ -32,28 +32,28 @@ Color Figure::color() {
   return m_color;
 }
 
-Figure* Figure::build_figure(Figure_Type choice, Color color) {
+FigurePtr Figure::build_figure(Figure_Type choice, Color color) {
   switch(choice){
     case ROOK:
-      return new Rook(color);
+      return make_shared<Rook>(color);
       break;
     case KNIGHT:
-      return new Knight(color);
+      return make_shared<Knight>(color);
       break;
     case BISHOP:
-      return new Bishop(color);
+      return make_shared<Bishop>(color);
       break;
     case QUEEN:
-      return new Queen(color);
+      return make_shared<Queen>(color);
       break;
     case KING:
-      return new King(color);
+      return make_shared<King>(color);
       break;
     case PAWN:
-      return new Pawn(color);
+      return make_shared<Pawn>(color);
       break;
     case EMPTY_CELL:
-      return new Empty_cell();
+      return make_shared<Empty_cell>();
       break;
     // default: 
     //   ...
