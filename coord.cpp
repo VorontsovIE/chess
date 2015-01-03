@@ -4,7 +4,7 @@ Coordinates::Coordinates (int new_letter, int new_digit) : m_letter(new_letter),
   // m_letter = new_letter;
   // m_digit = new_digit;
   if (m_letter < 0 || m_letter > 7 || m_digit < 0 || m_digit > 7) {
-    throw std::invalid_argument("Incorrect coordinates: Coordinates(" +std::to_string(new_letter) + "," + std::to_string(new_digit) + ")");
+    throw std::invalid_argument("Incorrect coordinates: Coordinates(" +std::to_string((long long)new_letter) + "," + std::to_string((long long)new_digit) + ")");
   }
 }
 
