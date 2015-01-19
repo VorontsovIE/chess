@@ -2,6 +2,7 @@
 #include "turn.h"
 #include "field.h"
 #include "coord.h"
+#include <thread>
 
 // Написать Field#draw; Turn.create_turn (проблема: ему скорее всего нужен field чтобы узнать тип хода)
 class Game {
@@ -17,8 +18,35 @@ public:
   Game () {
     current_side = WHITE;
     field = Field();
-    remain_time1 = 1800;
-    remain_time2 = 1800;
+    remain_time1 = 10;
+    remain_time2 = 10;
+    thread time_checker(&Game::run_clock, this);
+    time_checker.detach();
+  }
+
+  void run_clock() {
+    while(true) {
+      std::this_thread::sleep_for(std::chrono::seconds(1)); // спит минимум(!) секунду
+      update_timer();
+    }
+  }
+
+  void update_timer() {
+    if (current_side == WHITE) {
+      remain_time1 -= 1; // нет гарантий что прошла ровно секунда (но не меньше секунды)
+    } else {
+      remain_time2 -= 1;
+    }
+    if (remain_time1 <= 0) {
+      cout << "White has lost the game\n";
+      // cin.ignore(1); // can be concurrent with cin >> turn;
+      exit(0);
+    }
+    if (remain_time2 <= 0) {
+      cout << "Black has lost the game\n";
+      // cin.ignore(1);
+      exit(0);
+    }
   }
 
   bool finished () {
@@ -49,6 +77,7 @@ public:
     }
     story.push_back(t);
 
+    update_timer();
     current_side = (current_side == WHITE) ?  BLACK : WHITE;
     if (finished()) { // что если ничья? пат / конец времени
       cout << current_side << " has lost\n";
